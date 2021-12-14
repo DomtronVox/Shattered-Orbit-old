@@ -22,7 +22,13 @@ impl MissionViewState {
 
 impl UIState for MissionViewState {
 
-    fn ui_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
+
+    fn world_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
+        
+    }
+
+
+    fn ui_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
 
         //calculate size and position of side panel
         let left_menu_id = hash!();
@@ -66,9 +72,5 @@ impl UIState for MissionViewState {
             }
         );
     }
-
     
-    fn state_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
-        
-    }
 }

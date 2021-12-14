@@ -22,7 +22,11 @@ impl PlanetViewState {
 
 impl UIState for PlanetViewState {
 
-    fn ui_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
+    fn world_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
+        
+    }
+
+    fn ui_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
  
         //setup View Switcher and containing window
         let view_switcher_id = hash!();
@@ -39,7 +43,5 @@ impl UIState for PlanetViewState {
     }
 
     
-    fn state_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
-        
-    }
+    
 }

@@ -19,7 +19,11 @@ impl MainMenuState {
 
 impl UIState for MainMenuState {
 
-    fn ui_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
+    fn world_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
+        //no world rendering needed. Might do something later for main menu background.
+    }
+
+    fn ui_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
         let main_menu_id = hash!();
         
         //calculate center position
@@ -73,11 +77,5 @@ impl UIState for MainMenuState {
                 }
             },
         );
-    }
-
-
-    
-    fn state_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
-        
     }
 }

@@ -26,13 +26,13 @@ pub fn view_switcher(current_tab: u32, state_machine: &mut UIStateMachine,
             .ui(ui)
         {   
             x if x == 0 && x != current_tab =>
-                 StateEvent::ChangeState( Box::new(StationViewState{}) ),
+                 StateEvent::ChangeState( Box::new(StationViewState::new()) ),
             x if x == 1 && x != current_tab =>
-                 StateEvent::ChangeState( Box::new(OrbitalViewState{}) ),
+                 StateEvent::ChangeState( Box::new(OrbitalViewState::new()) ),
             x if x == 2 && x != current_tab =>
-                 StateEvent::ChangeState( Box::new(PlanetViewState{}) ),
+                 StateEvent::ChangeState( Box::new(PlanetViewState::new()) ),
             x if x == 3 && x != current_tab =>
-                 StateEvent::ChangeState( Box::new(MissionViewState{}) ),
+                 StateEvent::ChangeState( Box::new(MissionViewState::new()) ),
             _ => StateEvent::None
             
         }

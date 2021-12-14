@@ -4,21 +4,26 @@ use crate::Simulation;
 
 use crate::ui_state::MainMenuState;
 
+use macroquad::camera::set_default_camera;
+
 
 ///The game state trait lets us handle different stages of the application in a modular
 ///  way by simply changing to a new state as needed.
 pub trait UIState {
 
     fn update(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
-        self.ui_logic(state_machine, sim);
-        self.state_logic(state_machine, sim);
+        self.world_render(state_machine, sim);
+
+        //set default camera before drawing UI stuff
+        set_default_camera();
+        self.ui_render(state_machine, sim);
     }
+
+    //code that handles displaying the world
+    fn world_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation);
     
     //code that handles user interface logic
-    fn ui_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation);
-
-    //code that just handles manipulating the state
-    fn state_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation);
+    fn ui_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation);
 }
 
 

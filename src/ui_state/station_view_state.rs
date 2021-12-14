@@ -22,7 +22,12 @@ impl StationViewState {
 
 impl UIState for StationViewState {
 
-    fn ui_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
+    fn world_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
+        
+    }
+    
+
+    fn ui_render(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
         let side_menu_id = hash!();
         
         //calculate size and position of side panel
@@ -52,9 +57,5 @@ impl UIState for StationViewState {
             }
         );
     }
-
     
-    fn state_logic(&mut self, state_machine: &mut UIStateMachine, sim: &mut Simulation) {
-        
-    }
 }

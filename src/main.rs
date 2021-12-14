@@ -1,20 +1,29 @@
+mod ecs;
+use ecs::ECSManager;
+
 use macroquad::prelude::*;
 
 mod ui_state;
 use ui_state::{UIStateMachine, ControlData};
 
-struct Simulation {}
+struct Simulation {
+    pub ecs: ECSManager,
+}
+
 
 #[macroquad::main("Shattered Orbit")]
 async fn main() {  
     
     let mut ui_statemachine = UIStateMachine::new();
     
-    let mut simulation = Simulation{};
+    let mut simulation = Simulation {
+        ecs: ECSManager::new(),
+    };
 
     while ui_statemachine.running {
 
         //update model
+        simulation.ecs.update();
 
         //setup what's needed for drawing
         clear_background(BLACK);
