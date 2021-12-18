@@ -1,5 +1,5 @@
 mod satellite_gfx;
-pub use satellite_gfx::{SatelliteGFX, OrbitDisplaySystem};
+pub use satellite_gfx::{ModelType, SatelliteGFX, OrbitDisplaySystem};
 
 use specs::{Dispatcher, DispatcherBuilder};
 

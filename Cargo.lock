@@ -621,6 +621,7 @@ name = "shattered_orbit"
 version = "0.1.0"
 dependencies = [
  "macroquad",
+ "rayon",
  "specs",
 ]
 

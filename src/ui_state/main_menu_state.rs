@@ -1,4 +1,4 @@
-use super::{UIState, StateEvent, UIStateMachine, StationViewState};
+use super::{UIState, StateEvent, UIStateMachine, StationViewState, OrbitalViewState};
 use crate::Simulation;
 
 
@@ -8,6 +8,8 @@ use macroquad::{
     ui::{hash, widgets, root_ui},
 };
 
+
+use crate::ecs::create_test_entities;
 
 pub struct MainMenuState {}
 
@@ -51,8 +53,10 @@ impl UIState for MainMenuState {
                     .size(vec2(menu_size.x / 2., 40.))
                     .position(vec2(menu_size.x/4., 50.))
                     .ui(ui)
-                {  
-                    let new_state = StationViewState{};
+                { 
+                    create_test_entities(&mut sim.ecs.world);
+                     
+                    let new_state = OrbitalViewState::new();
                     state_machine.handle_event(
                         StateEvent::ChangeState( Box::new(new_state) )
                     );

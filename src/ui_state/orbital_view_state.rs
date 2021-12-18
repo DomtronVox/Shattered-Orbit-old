@@ -24,7 +24,7 @@ impl OrbitalViewState {
         OrbitalViewState {
             camera: Camera3D{
                 target: vec3(0., 0., 0.),
-                position: vec3(5., 5., 5.),
+                position: vec3(10., 10., 10.),
                 ..Default::default()
             },
         }

@@ -6,7 +6,10 @@ use macroquad::prelude::*;
 mod ui_state;
 use ui_state::{UIStateMachine, ControlData};
 
-struct Simulation {
+#[derive(Default)]
+pub struct DeltaTime(f64);
+
+pub struct Simulation {
     pub ecs: ECSManager,
 }
 
@@ -23,7 +26,7 @@ async fn main() {
     while ui_statemachine.running {
 
         //update model
-        simulation.ecs.update();
+        simulation.ecs.update(4000.);
 
         //setup what's needed for drawing
         clear_background(BLACK);

@@ -8,3 +8,4 @@ edition = "2018"
 [dependencies]
 macroquad = "0.3.13"
 specs = { version = "0.16.1", features = ["specs-derive"] }
+rayon = "1.5.0"
