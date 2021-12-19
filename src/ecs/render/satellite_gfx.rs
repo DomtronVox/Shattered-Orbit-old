@@ -11,10 +11,11 @@ use specs::{
 
 use macroquad::{
     models::draw_sphere,
-    color::Color,
+    color::{Color, colors::BLUE},
     math::{vec3, Vec3, Quat},
 };
 
+use crate::extend_microquad_gfx::draw_ellipse;
 
 
 pub enum ModelType {
@@ -87,7 +88,8 @@ impl<'a> System<'a> for OrbitDisplaySystem {
                 position = Some( rotation.mul_vec3(position2) );
                 
                 //next we draw out the satellite's orbit
-                
+                draw_ellipse(orbit.semi_major / 50000000., orbit.eccentricity, 
+                              orbit.inclination, orbit.longitude, BLUE);
                 
             }
 

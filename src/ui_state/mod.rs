@@ -2,7 +2,7 @@ mod state_machine;
 pub use state_machine::{UIState, StateEvent, UIStateMachine};
 
 mod common;
-pub use common::{view_switcher, draw_grid, handle_camera_controls};
+pub use common::{view_switcher, handle_camera_controls};
 
 mod control_data;
 pub use control_data::ControlData;

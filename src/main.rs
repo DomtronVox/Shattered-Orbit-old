@@ -3,6 +3,8 @@ use ecs::ECSManager;
 
 use macroquad::prelude::*;
 
+mod extend_microquad_gfx;
+
 mod ui_state;
 use ui_state::{UIStateMachine, ControlData};
 

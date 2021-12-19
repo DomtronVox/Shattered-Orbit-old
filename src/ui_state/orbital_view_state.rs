@@ -1,6 +1,6 @@
-use super::{UIState, StateEvent, UIStateMachine, view_switcher, draw_grid, handle_camera_controls};
+use super::{UIState, StateEvent, UIStateMachine, view_switcher, handle_camera_controls};
 use crate::Simulation;
-
+use crate::extend_microquad_gfx::draw_grid;
 
 use std::f32::consts::PI;
 use macroquad::{
