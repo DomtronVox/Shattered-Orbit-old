@@ -20,12 +20,15 @@ fn caclulate_vertex_at_angle(a: f64, b: f64, angle: f64) -> Vec3 {
     vec3(x as f32, y as f32, 0.)
 }
 
-///Draw an ellipse via line segments
+///Draw an orbital ellipse via line segments
 pub fn draw_ellipse(semi_major: f64, eccentricity: f64, inclination: f64, longitude: f64, 
         color: Color) {
     //we need to calculate some more info from the given info to work with the ellipse
     let foci_mag = eccentricity * semi_major;
     let semi_minor = ( semi_major.powi(2) - foci_mag.powi(2) ).sqrt();
+
+    //offset so drawing center is away from primaries foci
+    let center_offset = vec3( -foci_mag as f32, 0., 0. );
     
     //we need to setup the adjustment that will make this ellipse 3D
     let rotation = Quat::from_rotation_y(inclination as f32).mul_quat(
@@ -34,6 +37,7 @@ pub fn draw_ellipse(semi_major: f64, eccentricity: f64, inclination: f64, longit
     
     //calculate the very first vertex that we will draw a line from
     let mut last_vertex = vec3( (semi_major) as f32, 0., 0. );
+    last_vertex += center_offset; //offset drawing center
     //> we also need to rotate it to be in the correct 3D space
     last_vertex = rotation.mul_vec3(last_vertex);
     
@@ -45,6 +49,7 @@ pub fn draw_ellipse(semi_major: f64, eccentricity: f64, inclination: f64, longit
     
     while angle <= (2.*PI) {
         let mut vertex = caclulate_vertex_at_angle(semi_major, semi_minor, angle);
+        vertex += center_offset; //offset drawing center
         vertex = rotation.mul_vec3(vertex);
         
         //draw the segment

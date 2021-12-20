@@ -7,9 +7,10 @@ use macroquad::{
     math::{vec2, vec3, Vec3, Quat},
     window::{screen_width, screen_height},
     ui::{hash, root_ui, widgets},
+    models::{draw_line_3d},
     input::{is_key_down, KeyCode},
     camera::{Camera3D, set_camera},
-    color::colors::WHITE,
+    color::colors::{WHITE, YELLOW},
 };
 
 
@@ -24,7 +25,7 @@ impl OrbitalViewState {
         OrbitalViewState {
             camera: Camera3D{
                 target: vec3(0., 0., 0.),
-                position: vec3(10., 10., 10.),
+                position: vec3(0., -0.1, 20.),
                 ..Default::default()
             },
         }
@@ -41,7 +42,8 @@ impl UIState for OrbitalViewState {
         //set active camera
         set_camera(&self.camera);
         
-        draw_grid(20, 2., WHITE, WHITE);
+        //draw_grid(20, 2., WHITE, WHITE);
+        draw_line_3d(Vec3::ZERO, Vec3::X*100., YELLOW); //Line pointing in +X Axis
         
         //render valid entities onto camera
         sim.ecs.render_orbits()
