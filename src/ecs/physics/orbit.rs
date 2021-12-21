@@ -62,15 +62,22 @@ impl Orbit {
             6.674e-11 * mass //N-m2/kg2 * kg
         }
         
-        //calculate eccentric anomaly or E = acos( e + cos(v) / 1 + e * cos(v) )
-        fn eccentric_anomaly(&self, true_anomaly: f64) -> f64 {
-            ( ( self.eccentricity + true_anomaly.cos() ) / 
-                (1. + self.eccentricity * true_anomaly.cos() ) ).acos()
+        //calculate eccentric anomaly or E = atan( sqrt( (1-e) / (1+e) ) * tan( v / 2) )
+        fn eccentric_anomaly(&self) -> f64 {
+            //arctan only functions between -PI and PI so adjust if over PI
+            let true_anomaly =
+                if self.true_anomaly <= PI { self.true_anomaly }
+                else                       { self.true_anomaly - (2. * PI) };
+            
+            (
+                ( ( 1. - self.eccentricity ) / ( 1. + self.eccentricity ) ).sqrt() *
+                ( true_anomaly / 2. ).tan()
+            ).atan() * 2.
         }
         
         // calculate mean anomaly or M = E - e * cos(E)
-        fn mean_anomaly(&self, true_anomaly: f64) -> f64 {
-            let ea = self.eccentric_anomaly(true_anomaly);
+        fn mean_anomaly(&self) -> f64 {
+            let ea = self.eccentric_anomaly();
             ea - self.eccentricity * ea.sin()
         }
 
@@ -87,15 +94,12 @@ impl Orbit {
                 
         //calculate orbital position after a span of time of new_M = n * t + cur_M
         pub fn position_after_time(&self, time_span: f64) -> f64 {
-            let true_anomaly =
-                if self.true_anomaly < PI { self.true_anomaly }
-                else                      { self.true_anomaly - PI };
         
-            let new_m = self.mean_motion() * time_span + self.mean_anomaly(true_anomaly);
+            let new_m = self.mean_motion() * time_span + self.mean_anomaly();
             
             let mut new_ta = self.aproximate_true_anomaly( new_m );
             
-            if self.true_anomaly > PI { new_ta += PI; }
+            //if self.true_anomaly > PI { new_ta += PI; }
             if self.true_anomaly >= 2. * PI { new_ta -= 2. * PI; }
             
             new_ta
