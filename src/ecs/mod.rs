@@ -109,4 +109,12 @@ pub fn create_test_entities(world: &mut World) {
         model: ModelType::Sphere{ radius: 0.5 }, color: Color::new(255.,255.,255., 1.) }
     )
     .build();
+    
+    //moon
+    world.create_entity()
+    .with(Orbit::new(5.9722e24, 184748000., 0.6549006, 0.92693043, 0., 0.))
+    .with(SatelliteGFX { 
+        model: ModelType::Sphere{ radius: 0.1 }, color: Color::new(255.,0.,0., 1.) }
+    )
+    .build();
 }

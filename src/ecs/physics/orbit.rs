@@ -15,6 +15,7 @@ use specs::{
 
 
 
+
 ///Component that holds orbit info
 #[derive(Component)]
 #[storage(VecStorage)]
@@ -86,10 +87,52 @@ impl Orbit {
             ( self.mu / self.semi_major.powi(3) ).sqrt()
         }
         
-        //calculate true anomaly from a given mean anomaly
-        fn aproximate_true_anomaly(&self, mean_anomaly: f64) -> f64 {
+        //calculate an approximation of true anomaly from a given mean anomaly
+        // Note, needs very small eccentricity since error is e^3
+        fn true_anomaly_by_approximation(&self, mean_anomaly: f64) -> f64 {
             mean_anomaly + 2. * self.eccentricity * mean_anomaly.sin() +
                 1.25 * self.eccentricity.powi(2) * (2. * mean_anomaly).sin()
+        }
+        
+        //calculate true anomaly via iteration
+        fn true_anomaly_by_iteration(&self, mean_anomaly: f64) -> f64 {
+        
+            //we need to calculate eccentric anomaly by iteration
+            let mut eccentric_anomaly = mean_anomaly; //start our guess with mean anomaly
+            let mut test_mean_anomaly = 0.; //result from our guesses
+            
+            //> iterate at most 30 times
+            for iteration in (0..29) {
+                //we try our guess in the formula
+                test_mean_anomaly = 
+                    eccentric_anomaly - self.eccentricity * eccentric_anomaly.sin();
+                
+                //we check which direction to alter our guess and alter it by the difference
+                //Note: had to hack in a round to decimal places function (defined at top) 
+                //  because rust doesn't have one
+                if        test_mean_anomaly > mean_anomaly { 
+                    eccentric_anomaly -= test_mean_anomaly-mean_anomaly;
+                    
+                } else if test_mean_anomaly < mean_anomaly {
+                    eccentric_anomaly += mean_anomaly-test_mean_anomaly;
+                
+                //end the loop when the two values are equal    
+                } else { break; }
+                
+            }
+            
+            //arctan only functions between -PI and PI so adjust if over PI
+            let eccentric_anomaly =
+                if eccentric_anomaly <= PI { eccentric_anomaly }
+                else                       { eccentric_anomaly - (2. * PI) };
+            
+            //Now we can use the eccentric anomaly to calculate true anomaly
+            //( (eccentric_anomaly.cos() - self.eccentricity) / 
+            //    (1. - self.eccentricity * eccentric_anomaly.cos()) ).acos()
+            (
+                ( eccentric_anomaly / 2. ).tan() / 
+                ( ( 1. - self.eccentricity ) / ( 1.+ self.eccentricity ) ).sqrt()
+            ).atan() * 2.
         }
                 
         //calculate orbital position after a span of time of new_M = n * t + cur_M
@@ -97,9 +140,16 @@ impl Orbit {
         
             let new_m = self.mean_motion() * time_span + self.mean_anomaly();
             
-            let mut new_ta = self.aproximate_true_anomaly( new_m );
-            
-            //if self.true_anomaly > PI { new_ta += PI; }
+            //approximation formula is good for low eccentricity since it's error is e^3
+            // otherwise we have to run it by iteration
+            let mut new_ta = 
+                if self.eccentricity < 0.09 {
+                    self.true_anomaly_by_approximation( new_m )
+                } else {
+                    self.true_anomaly_by_iteration( new_m )
+                };
+                
+            //If we are over 2PI we want to adjust back down so we always stay between 0 and 2PI
             if self.true_anomaly >= 2. * PI { new_ta -= 2. * PI; }
             
             new_ta
